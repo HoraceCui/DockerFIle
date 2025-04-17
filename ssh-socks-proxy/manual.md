@@ -24,3 +24,7 @@ curl -x socks5h://127.0.0.1:20168 http://ipinfo.io
 curl  http://ipinfo.io
 
 docker rm -f ssh-socks
+
+docker save --output ssh-socks-proxy.tar ssh-socks-proxy:latest
+docker image rm ssh-socks-proxy:latest
+docker load --input ssh-socks-proxy.tar
