@@ -41,7 +41,9 @@ jobs:
               SERVICES="$SERVICES $dir"
             fi
           done
-
+          for svc in $SERVICES; do
+            echo "✔ Service to build: $svc"
+          done
           echo "services=$SERVICES" >> $GITHUB_OUTPUT
           
       - name: Build and push Docker images to ACR
