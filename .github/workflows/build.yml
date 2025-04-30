@@ -28,15 +28,33 @@ jobs:
         id: date
         run: echo "tag=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
 
-      - name: Build and push Docker images to ACR
+      - name: Detect changed services
+        id: changes
         run: |
-          DATE_TAG=${{ steps.date.outputs.tag }}
-          IMAGE_NAME=registry.cn-shanghai.aliyuncs.com/${{ secrets.ALIYUN_NAMESPACE }}/ssh-socks-proxy
-          echo "Building and pushing $IMAGE_NAME:$DATE_TAG and $IMAGE_NAME:latest..."
+          git fetch origin ${{ github.event.before }}
+          CHANGED_DIRS=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | \
+            awk -F/ '{print $1}' | sort -u)
 
-          docker build -t $IMAGE_NAME:$DATE_TAG -t $IMAGE_NAME:latest ssh-socks-proxy
-          docker push $IMAGE_NAME:$DATE_TAG
-          docker push $IMAGE_NAME:latest
+          SERVICES=""
+          for dir in $CHANGED_DIRS; do
+            if [ -f "$dir/Dockerfile" ]; then
+              SERVICES="$SERVICES $dir"
+            fi
+          done
 
+          echo "services=$SERVICES" >> $GITHUB_OUTPUT
+          
+      - name: Build and push Docker images to ACR
+        if: steps.changes.outputs.services != ''
+        run: |
+          for service in ${{ steps.changes.outputs.services }}; do
+            DATE_TAG=${{ steps.date.outputs.tag }}
+            IMAGE_NAME=registry.cn-shanghai.aliyuncs.com/${{ secrets.ALIYUN_NAMESPACE }}/$service
+            echo "Building and pushing $IMAGE_NAME:$DATE_TAG and $IMAGE_NAME:latest..."
+
+            docker build -t $IMAGE_NAME:$DATE_TAG -t $IMAGE_NAME:latest $service
+            docker push $IMAGE_NAME:$DATE_TAG
+            docker push $IMAGE_NAME:latest
+          done
 
               
