@@ -9,7 +9,7 @@ USER proxyuser
 RUN mkdir -p /home/proxyuser/.ssh
 WORKDIR /home/proxyuser
 
-# 启动脚本
+# 启动脚本 
 COPY --chown=proxyuser:proxyuser entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
