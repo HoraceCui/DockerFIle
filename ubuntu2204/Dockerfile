@@ -23,6 +23,7 @@ RUN useradd -m -s /bin/bash ubuntu && \
 RUN echo "ubuntu ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/ubuntu && \
     chmod 440 /etc/sudoers.d/ubuntu
 
+    
 # 设置 ubuntu 用户为默认用户
 USER ubuntu
 # 默认进入 shell
