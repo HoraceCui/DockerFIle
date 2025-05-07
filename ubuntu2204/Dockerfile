@@ -5,14 +5,12 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # 安装 ca-certificates，并更新源为上海交大
 RUN apt-get update && apt-get upgrade -y && \
-    apt-get install -y ca-certificates && \
+    apt-get install -y ca-certificates openssh-client sudo curl wget vim iputils-ping nano && \
     sed -i 's|http://archive.ubuntu.com/ubuntu/|https://mirror.sjtu.edu.cn/ubuntu/|g' /etc/apt/sources.list && \
     sed -i 's|http://security.ubuntu.com/ubuntu|https://mirror.sjtu.edu.cn/ubuntu|g' /etc/apt/sources.list && \
     apt-get update && \
     apt-get upgrade -y
 
-# 安装一些常用工具，包括 ping 和 sudo
-RUN apt-get install -y curl wget vim iputils-ping sudo
 
 # 创建一个新用户 ubuntu，并赋予 sudo 权限
 RUN useradd -m -s /bin/bash ubuntu && \
@@ -23,6 +21,8 @@ RUN useradd -m -s /bin/bash ubuntu && \
 RUN echo "ubuntu ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/ubuntu && \
     chmod 440 /etc/sudoers.d/ubuntu
 
+# 设置工作目录为用户主目录
+WORKDIR /home/ubuntu
     
 # 设置 ubuntu 用户为默认用户
 USER ubuntu
