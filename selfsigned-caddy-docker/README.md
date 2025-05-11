@@ -9,6 +9,8 @@
 1. 生成自签名证书：
 
    ```bash
+   mkdir -p ./certs
+   chmod u+w ./certs
    chmod +x generate-cert.sh
    ./generate-cert.sh
    ```
