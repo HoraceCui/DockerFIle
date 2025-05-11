@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DOMAINS=("localhost")
+DOMAINS=("localhost""example.com" "*.example.com")
 IPS=("127.0.0.1" "::1" "192.168.31.1" "2001:db8::1")
 CERT_DIR="./certs"
 KEY_FILE="$CERT_DIR/selfsigned.key"
