@@ -1,0 +1,9 @@
+https://localhost {
+	tls certs/server.crt certs/server.key {
+		client_auth {
+			mode require_and_verify
+			trusted_ca_cert_file certs/ca.crt
+		}
+	}
+	respond "Hello, secure world via mTLS (PKCS#12 client cert)!" 200
+}
